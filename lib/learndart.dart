@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'package:http/http.dart' as http;
+
+
 printInteger(int number) {
   print('The number is $number');
 
@@ -137,7 +141,31 @@ main() {
   //  var student = new Student("liuzhao", 18, 'male');
   var student = new Student.create("liuzhao", 18, 'male'); // 非传统构造方法
   student.sayHello();
+
+  C c = new C();
+  c.a();
+  c.b();
+
+  println();
+
+  // 网络
+  getNetData().then((var str) => print(str));
 }
+
+class A {
+  a() {
+    print("I'm a");
+  }
+}
+
+class B {
+  b() {
+    print("I'm b");
+  }
+}
+
+class C = A with B; // C 由 A B混合起来
+
 
 class Human {
   Human.fromString(var str){
@@ -161,6 +189,15 @@ class Student {
   int age;
   String gender;
 
+  // get set方法使用
+  var _num;
+
+  get num => _num;
+
+  set num(value) {
+    _num = value;
+  }
+
   Student(this.name, this.age, this.gender); // 已经等同于 Java的构造方法
 
   // 意思是 Dart的构造方法不那么重要？
@@ -169,6 +206,7 @@ class Student {
   void sayHello() {
     print("name is " + name + "age is $age " + "gender is" + gender);
   }
+
 
 }
 
@@ -187,3 +225,22 @@ class Person {
     print(string + "\n");
   }
 }
+
+
+// 库相关
+/**
+ * 引入某个类库 import 'dart:html';
+ * 引入自己的文件 import './util.dart'；
+ * deferred as 让包懒加载，使用的时候才加载；import 'package:greetings/hello.dart' deferred as hello;
+ */
+
+
+/**
+ * 异步 async 和 await是成对出现的 如果方法中有耗时操作则需要将这个方法设置为async，并给其中的耗时操作加上 await 关键字
+ * 如果方法有返回值，需要将返回值塞到Future 并返回
+ */
+Future<String> getNetData() async {
+  http.Response response = await http.get("https://www.baidu.com");
+  return response.body;
+}
+
